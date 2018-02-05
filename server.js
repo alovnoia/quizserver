@@ -4,6 +4,7 @@ var express = require('express'),
   mongoose = require('mongoose'),
   Topic = require('./api/models/topicModel'), //created model loading here
   Admin = require('./api/models/adminModel'),
+  Question = require('./api/models/questionModel'),
   bodyParser = require('body-parser');
 
 // Add headers

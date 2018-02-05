@@ -9,3 +9,10 @@ var TopicSchema = new Schema({
 });
 
 module.exports = mongoose.model('Topics', TopicSchema);
+
+
+/*{
+    name: "Hóa học",
+    desc: "Các câu hỏi về hóa học",
+    status: true
+}*/
