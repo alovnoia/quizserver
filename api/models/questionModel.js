@@ -5,6 +5,12 @@ var Schema = mongoose.Schema;
 var QuestionSchema = new Schema({
   content: String,
   image: String,
+  level: {
+    type: String,
+    enum: ['easy', 'medium', 'hard'],
+    default: ['easy']
+  },
+  topic: [String],
   answers: [{
   	content: String,
   	correct: Boolean
