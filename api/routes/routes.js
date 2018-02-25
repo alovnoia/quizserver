@@ -9,6 +9,9 @@ module.exports = function(app) {
     .get(questionStuff.list_all_questions)
     .post(questionStuff.create_a_question);
 
+  app.route('/questions/filter')
+    .post(questionStuff.find_question);
+
   app.route('/questions/:questionId')
     .get(questionStuff.read_a_question)
     .put(questionStuff.update_a_question)

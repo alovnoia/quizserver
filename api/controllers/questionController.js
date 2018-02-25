@@ -11,6 +11,48 @@ exports.list_all_questions = function(req, res) {
   });
 };
 
+exports.find_question = function(req, res) {
+  var level = req.body.level === 'none' ? '' : req.body.level;
+  var topic = req.body.topic === 'none' ? '' : req.body.topic;
+  var type = req.body.type === 'none' ? '' : req.body.type;
+  var id = req.body.id;
+  var answer = req.body.answer;
+  var content = req.body.content;
+  var queryObj = {};
+  var regexp;
+  if (level) {
+    queryObj['level'] = level;
+  }
+  if (topic) {
+    queryObj['topic'] = {$in: [topic]};
+  }
+  if (type == 'text') {
+    queryObj['image'] = {$eq: ""};
+  }
+  if (type == 'image') {
+    queryObj['image'] = {$ne: ""};
+  }
+  if (id) {
+    queryObj['_id'] = id;
+  }
+  if (answer) {
+    regexp = new RegExp(answer + "");
+    //queryObj.answers = {};
+    queryObj['answers.content'] = {$regex: regexp};
+  }
+  if (content) {
+    regexp = new RegExp(content + "");
+    queryObj['content'] = {$regex: regexp};
+  }
+  //console.log(queryObj);
+  //Question.find(JSON.parse('{"_id": "5a786deda153c61cbc95f3cb", "level": "hard", "topic": {$in: ["5a78615b3992c7e4051c6643"]}, "image": {$ne: ""}, "content": {$regex: /số nào/}, "answers.content": {$regex: /1/}}'),
+  Question.find(queryObj, function(err, question) {
+    if (err)
+      res.send(err);
+    res.json(question);
+  });
+};
+
 exports.create_a_question = function(req, res) {
   var new_question = new Question(req.body);
   new_question.save(function(err, question) {
