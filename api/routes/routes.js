@@ -9,6 +9,9 @@ module.exports = function(app) {
     .get(questionStuff.list_all_questions)
     .post(questionStuff.create_a_question);
 
+  app.route('/questions/check-code')
+    .post(questionStuff.check_code);  
+
   app.route('/questions/filter')
     .post(questionStuff.find_question);
 

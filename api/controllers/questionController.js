@@ -11,11 +11,24 @@ exports.list_all_questions = function(req, res) {
   });
 };
 
+exports.check_code = function(req, res) {
+  Question.find({code: req.body.code}, function(err, question) {
+    if (err) {
+      res.send(err);
+    }
+    if (question.length > 0) {
+      res.send({result: false});
+    } else {
+      res.send({result: true});      
+    }
+  });
+}
+
 exports.find_question = function(req, res) {
   var level = req.body.level === 'none' ? '' : req.body.level;
   var topic = req.body.topic === 'none' ? '' : req.body.topic;
   var type = req.body.type === 'none' ? '' : req.body.type;
-  var id = req.body.id;
+  var code = req.body.code;
   var answer = req.body.answer;
   var content = req.body.content;
   var queryObj = {};
@@ -24,7 +37,7 @@ exports.find_question = function(req, res) {
     queryObj['level'] = level;
   }
   if (topic) {
-    queryObj['topic'] = {$in: [topic]};
+    queryObj['topic._id'] = {$in: [topic]};
   }
   if (type == 'text') {
     queryObj['image'] = {$eq: ""};
@@ -32,8 +45,8 @@ exports.find_question = function(req, res) {
   if (type == 'image') {
     queryObj['image'] = {$ne: ""};
   }
-  if (id) {
-    queryObj['_id'] = id;
+  if (code) {
+    queryObj['code'] = code;
   }
   if (answer) {
     regexp = new RegExp(answer + "");
