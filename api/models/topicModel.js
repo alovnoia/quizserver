@@ -5,7 +5,7 @@ var Schema = mongoose.Schema;
 var TopicSchema = new Schema({
   name: String,
   desc: String,
-  status: Boolean 
+  status: Boolean
 });
 
 module.exports = mongoose.model('Topics', TopicSchema);

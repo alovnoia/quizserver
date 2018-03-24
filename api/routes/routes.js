@@ -3,6 +3,26 @@ module.exports = function(app) {
   var topicStuff = require('../controllers/topicController');
   var adminStuff = require('../controllers/adminController');
   var questionStuff = require('../controllers/questionController');
+  var packageStuff = require('../controllers/packageController');
+
+  // package routes
+  app.route('/packages')
+    .get(packageStuff.list_all_packs)
+    .post(packageStuff.create_a_pack);
+
+  app.route('/packages/check-code')
+    .post(packageStuff.check_code);
+
+  app.route('/packages/generate-questions')
+    .post(packageStuff.generate_questions);        
+
+  app.route('/packages/search')
+    .post(packageStuff.find_packs);
+
+  app.route('/packages/:packageId')
+    .get(packageStuff.read_a_pack)
+    .put(packageStuff.update_a_pack)
+    .delete(packageStuff.delete_a_pack);
 
   // question routes
   app.route('/questions')
@@ -12,7 +32,7 @@ module.exports = function(app) {
   app.route('/questions/check-code')
     .post(questionStuff.check_code);  
 
-  app.route('/questions/filter')
+  app.route('/questions/search')
     .post(questionStuff.find_question);
 
   app.route('/questions/:questionId')

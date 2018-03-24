@@ -25,9 +25,9 @@ exports.check_code = function(req, res) {
 }
 
 exports.find_question = function(req, res) {
-  var level = req.body.level === 'none' ? '' : req.body.level;
-  var topic = req.body.topic === 'none' ? '' : req.body.topic;
-  var type = req.body.type === 'none' ? '' : req.body.type;
+  var level = req.body.level;
+  var topic = req.body.topic;
+  var type = req.body.type;
   var code = req.body.code;
   var answer = req.body.answer;
   var content = req.body.content;
