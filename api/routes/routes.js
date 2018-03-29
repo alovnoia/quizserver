@@ -19,7 +19,7 @@ module.exports = function(app) {
   app.route('/packages/search')
     .post(packageStuff.find_packs);
 
-  app.route('/packages/:packageId')
+  app.route('/packages/:packId')
     .get(packageStuff.read_a_pack)
     .put(packageStuff.update_a_pack)
     .delete(packageStuff.delete_a_pack);
@@ -34,6 +34,9 @@ module.exports = function(app) {
 
   app.route('/questions/search')
     .post(questionStuff.find_question);
+
+  app.route('/questions/find-by-list')
+    .post(questionStuff.find_question_by_list);
 
   app.route('/questions/:questionId')
     .get(questionStuff.read_a_question)

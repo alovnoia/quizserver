@@ -20,6 +20,10 @@ var PackageSchema = new Schema({
   usage: {
     type: Number,
     default: 0
+  },
+  deleted: {
+    type: Boolean,
+    default: false
   }
 });
 

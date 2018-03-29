@@ -5,7 +5,11 @@ var Schema = mongoose.Schema;
 var TopicSchema = new Schema({
   name: String,
   desc: String,
-  status: Boolean
+  status: Boolean,
+  deleted: {
+  	type: Boolean,
+  	default: false
+  }
 });
 
 module.exports = mongoose.model('Topics', TopicSchema);

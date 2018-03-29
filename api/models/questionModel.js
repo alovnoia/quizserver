@@ -15,7 +15,11 @@ var QuestionSchema = new Schema({
   answers: [{
   	content: String,
   	correct: Boolean
-  }]
+  }],
+  deleted: {
+    type: Boolean,
+    default: false
+  }
 });
 
 module.exports = mongoose.model('Questions', QuestionSchema);

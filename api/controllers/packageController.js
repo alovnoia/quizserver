@@ -52,6 +52,7 @@ exports.find_packs = function(req, res) {
       queryObj['usage'] = {$lte: usage};
     }
   }
+  queryObj['deleted'] = false;
   console.log(queryObj);
   Package.find(queryObj, function(err, pack) {
     if (err)
@@ -105,12 +106,16 @@ exports.update_a_pack = function(req, res) {
 };
 
 exports.delete_a_pack = function(req, res) {
-  console.log(req.params.packageId);
-  Package.remove({
+  Package.findOneAndUpdate({_id: req.params.packId}, {deleted: true}, {new: true}, function(err, pack) {
+    if (err)
+      res.send(err);
+    res.json(pack);
+  });
+/*  Package.remove({
     _id: req.params.packageId
   }, function(err, pack) {
     if (err)
       res.send(err);
     res.json({ message: 'Package successfully deleted' });
-  });
+  });*/
 };

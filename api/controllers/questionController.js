@@ -1,7 +1,8 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-Question = mongoose.model('Questions');
+Question = mongoose.model('Questions'),
+Package = mongoose.model('Packages');
 
 exports.list_all_questions = function(req, res) {
   Question.find({}, function(err, question) {
@@ -57,6 +58,7 @@ exports.find_question = function(req, res) {
     regexp = new RegExp(content + "");
     queryObj['content'] = {$regex: regexp};
   }
+  queryObj['deleted'] = false;
   //console.log(queryObj);
   //Question.find(JSON.parse('{"_id": "5a786deda153c61cbc95f3cb", "level": "hard", "topic": {$in: ["5a78615b3992c7e4051c6643"]}, "image": {$ne: ""}, "content": {$regex: /số nào/}, "answers.content": {$regex: /1/}}'),
   Question.find(queryObj, function(err, question) {
@@ -92,12 +94,29 @@ exports.update_a_question = function(req, res) {
 };
 
 exports.delete_a_question = function(req, res) {
+  Question.findOneAndUpdate({_id: req.params.questionId}, {deleted: true}, {new: true}, function(err, question) {
+    if (err) {
+      res.send(err);
+    } else {
+      Package.updateMany({'questions.id': {$in: [req.params.questionId]}}, {deleted: true}, {new: true}, function(err, p){});
+      res.json(question);    
+    }
 
-  Question.remove({
+  });
+/*  Question.remove({
     _id: req.params.questionId
   }, function(err, question) {
     if (err)
       res.send(err);
     res.json({ message: 'Question successfully deleted' });
+  });*/
+};
+
+exports.find_question_by_list = function(req, res) {
+  console.log(req.body.questionList);
+  Question.find({_id: {$in: req.body.questionList}}, function(err, question) {
+    if (err)
+      res.send(err);
+    res.json(question);
   });
 };
