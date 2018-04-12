@@ -66,7 +66,8 @@ exports.generate_questions = function(req, res) {
     {
       $match: {
         'level': req.body.level, 
-        'topic._id': {$in: [req.body.topic]}
+        'topic._id': {$in: [req.body.topic]},
+        'deleted': false
       }
     }, 
     {
@@ -81,7 +82,6 @@ exports.generate_questions = function(req, res) {
 
 exports.create_a_pack = function(req, res) {
   var new_pack = new Package(req.body);
-  console.log(req.body);
   new_pack.save(function(err, pack) {
     if (err)
       res.send(err);

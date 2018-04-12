@@ -4,6 +4,19 @@ module.exports = function(app) {
   var adminStuff = require('../controllers/adminController');
   var questionStuff = require('../controllers/questionController');
   var packageStuff = require('../controllers/packageController');
+  var challengeStuff = require('../controllers/challengeController');
+
+
+  // topics challenges ------------------------------------------------
+  app.route('/challenges')
+    .get(challengeStuff.list_all_challenges)
+    .post(challengeStuff.create_a_challenge);
+
+
+  app.route('/topics/:topicId')
+    .get(challengeStuff.read_a_challenge)
+    .put(challengeStuff.update_a_challenge)
+    .delete(challengeStuff.delete_a_challenge);
 
   // package routes
   app.route('/packages')
