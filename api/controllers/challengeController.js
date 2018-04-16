@@ -4,9 +4,10 @@ var mongoose = require('mongoose'),
 Challenge = mongoose.model('Challenges'),
 Question = mongoose.model('Questions'),
 Package = mongoose.model('Packages');
+var imageHelper = require('../helper/imageHelper');
 
 exports.list_all_challenges = function(req, res) {
-  Challenge.find({deleted: false}, function(err, challenge) {
+  Challenge.find({}, function(err, challenge) {
     if (err)
       res.send(err);
     res.json(challenge);
@@ -44,6 +45,10 @@ exports.create_a_challenge = function(req, res) {
           console.log(challenge);
           if (err)
             res.send(err);
+          /*var base64Image;
+          for (var q of challenge.package.questions) {
+            base64Image = imageHelper.base64_encode(q.image);
+          }*/
           res.json(challenge);
         });
       }
@@ -79,11 +84,4 @@ exports.delete_a_challenge = function(req, res) {
       res.json(challenge);
     }
   });
-/*  Challenge.remove({
-    _id: req.params.challengeId
-  }, function(err, challenge) {
-    if (err)
-      res.send(err);
-    res.json({ message: 'Challenge successfully deleted' });
-  });*/
 };

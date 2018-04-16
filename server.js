@@ -5,7 +5,11 @@ var express = require('express'),
   Topic = require('./api/models/topicModel'), //created model loading here
   Admin = require('./api/models/adminModel'),
   Question = require('./api/models/questionModel'),
+  Package = require('./api/models/packageModel'),
+  Challenge = require('./api/models/challengeModel'),
+  Game = require('./api/models/gameModel'),
   bodyParser = require('body-parser');
+global.imageUrl = 'assets/img/';
 
 // Add headers
 app.use(function (req, res, next) {

@@ -5,15 +5,29 @@ module.exports = function(app) {
   var questionStuff = require('../controllers/questionController');
   var packageStuff = require('../controllers/packageController');
   var challengeStuff = require('../controllers/challengeController');
+  var gameStuff = require('../controllers/gameController');
+
+  // games ------------------------------------------------
+  app.route('/games/find')
+    .post(gameStuff.find_a_game);
+
+  app.route('/games')
+    .get(gameStuff.list_all_games)
+    .post(gameStuff.create_a_game);
 
 
-  // topics challenges ------------------------------------------------
+  app.route('/games/:gameId')
+    .get(gameStuff.read_a_game)
+    .put(gameStuff.update_a_game)
+    .delete(gameStuff.delete_a_game);
+
+  // challenges ------------------------------------------------
   app.route('/challenges')
     .get(challengeStuff.list_all_challenges)
     .post(challengeStuff.create_a_challenge);
 
 
-  app.route('/topics/:topicId')
+  app.route('/challenges/:challengeId')
     .get(challengeStuff.read_a_challenge)
     .put(challengeStuff.update_a_challenge)
     .delete(challengeStuff.delete_a_challenge);

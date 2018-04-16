@@ -12,7 +12,12 @@ var ChallengeSchema = new Schema({
     type: Boolean,
     default: true
   },
-  package: Object
+  package: Object,
+  result: Object,
+  gameType: {
+    type: String,
+    default: 'normal'
+  }
 });
 
 module.exports = mongoose.model('Challenges', ChallengeSchema);
