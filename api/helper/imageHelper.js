@@ -6,7 +6,7 @@ exports.base64_encode = function (file) {
     // read binary data
     var bitmap = fs.readFileSync(imageUrl + file);
     // convert binary data to base64 encoded string
-    return new Buffer(bitmap).toString('base64');
+    return 'data:image/png;base64, ' + new Buffer(bitmap).toString('base64');
 };
 
 // function to create file from base64 encoded string

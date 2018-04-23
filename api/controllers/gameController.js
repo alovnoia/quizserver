@@ -5,6 +5,7 @@ Challenge = mongoose.model('Challenges'),
 Question = mongoose.model('Questions'),
 Package = mongoose.model('Packages'),
 Game = mongoose.model('Games');
+var imageHelper = require('../helper/imageHelper');
 
 exports.list_all_games = function(req, res) {
   Game.find({}, function(err, game) {
@@ -15,11 +16,18 @@ exports.list_all_games = function(req, res) {
 };
 
 exports.find_a_game = function(req, res) {
+  var requestJson;
+  // mobile request not same with web request
+  if (req.body.mobile) {
+    requestJson = JSON.parse(req.body.data);
+  } else {
+    requestJson = req.body;
+  }
   Challenge.aggregate([
   {
     $match: {
-      'package.level': req.body.level, 
-      'package.topic.id': req.body.topic._id,
+      'package.level': requestJson.level, 
+      'package.topic.id': requestJson.topic._id,
       'enable': true,
       'status': true
     }
@@ -30,6 +38,11 @@ exports.find_a_game = function(req, res) {
   function(err, challenge) {
     if (err)
       res.send(err)
+    for (var i = 0; i < challenge[0].package.questions.length; i++) {
+      if (challenge[0].package.questions[i].image) {
+        challenge[0].package.questions[i].base64Image = imageHelper.base64_encode(challenge[0].package.questions[i].image);
+      }
+    }    
     // fake user 2 for test
     var newGame = {
       idUser1: challenge[0].idUser1,
@@ -43,7 +56,17 @@ exports.find_a_game = function(req, res) {
 
 exports.create_a_game = function(req, res) {
   console.log(req.body);
-  var newGame = new Game(req.body);
+  var requestJson;
+  // mobile request not same with web request
+  if (req.body.mobile) {
+    requestJson = JSON.parse(req.body.data);
+  } else {
+    requestJson = req.body;
+  }
+  var newGame = new Game(requestJson);
+  for (var i = 0; i < newGame.package.questions.length; i++) {
+    newGame.package.questions[i].base64Image = '';
+  }  
   newGame.save(function(err, game) {
     if (err)
       res.send(err);

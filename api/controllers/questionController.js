@@ -3,6 +3,7 @@
 var mongoose = require('mongoose'),
 Question = mongoose.model('Questions'),
 Package = mongoose.model('Packages');
+var imageHelper = require('../helper/imageHelper');
 
 exports.list_all_questions = function(req, res) {
   Question.find({}, function(err, question) {
@@ -70,11 +71,19 @@ exports.find_question = function(req, res) {
 
 exports.create_a_question = function(req, res) {
   var new_question = new Question(req.body);
+  console.log(new_question.base64Image);
+  imageHelper.base64_decode(new_question.base64Image.split(',')[1], new_question.image);
+  new_question.base64Image = '';
   new_question.save(function(err, question) {
     if (err)
       res.send(err);
     res.json(question);
   });
+};
+
+exports.get_base64_image = function(req, res) {
+  console.log(req.body.image);
+  res.json({base64Image: imageHelper.base64_encode(req.body.image)});
 };
 
 exports.read_a_question = function(req, res) {
@@ -86,6 +95,10 @@ exports.read_a_question = function(req, res) {
 };
 
 exports.update_a_question = function(req, res) {
+  if (req.body.image) {
+    imageHelper.base64_decode(req.body.base64Image, req.body.image);
+  }
+  req.body.base64Image = '';
   Question.findOneAndUpdate({_id: req.params.questionId}, req.body, {new: true}, function(err, question) {
     if (err)
       res.send(err);

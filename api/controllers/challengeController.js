@@ -15,11 +15,19 @@ exports.list_all_challenges = function(req, res) {
 };
 
 exports.create_a_challenge = function(req, res) {
+  var requestJson;
+  // mobile request not same with web request
+  if (req.body.mobile) {
+    requestJson = JSON.parse(req.body.data);
+  } else {
+    requestJson = req.body;
+  }
+  //console.log(requestJson);
   Package.aggregate([
   {
     $match: {
-      'level': req.body.level, 
-      'topic.id': req.body.topic._id,
+      'level': requestJson.level, 
+      'topic.id': requestJson.topic._id,
       'deleted': false
     }
   }, 
@@ -36,23 +44,46 @@ exports.create_a_challenge = function(req, res) {
       if (err) {
         res.send(err);
       } else {
+        for (var i = 0; i < q.length; i++) {
+          if (q[i].image) {
+            q[i].base64Image = imageHelper.base64_encode(q[i].image);
+          }
+        }
+        console.log(q);
         p[0].questions = q;
         var new_challenge = new Challenge({
           idUser1: req.body.idUser1,
           package: p[0]
         });
-        new_challenge.save(function(err, challenge) {
+        res.json(new_challenge);
+        /*new_challenge.save(function(err, challenge) {
           console.log(challenge);
           if (err)
             res.send(err);
-          /*var base64Image;
-          for (var q of challenge.package.questions) {
-            base64Image = imageHelper.base64_encode(q.image);
-          }*/
           res.json(challenge);
-        });
+        });*/
       }
     });
+  });
+};
+
+exports.save_a_challenge = function(req, res) {
+  var requestJson;
+  // mobile request not same with web request
+  if (req.body.mobile) {
+    requestJson = JSON.parse(req.body.data);
+  } else {
+    requestJson = req.body;
+  }
+  var new_challenge = new Challenge(requestJson);
+  for (var i = 0; i < new_challenge.package.questions.length; i++) {
+    new_challenge.package.questions[i].base64Image = '';
+  }
+  new_challenge.save(function(err, challenge) {
+    //console.log(challenge);
+    if (err)
+      res.send(err);
+    res.json(challenge);
   });
 };
 

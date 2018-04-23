@@ -22,6 +22,9 @@ module.exports = function(app) {
     .delete(gameStuff.delete_a_game);
 
   // challenges ------------------------------------------------
+  app.route('/challenges/save')
+    .post(challengeStuff.save_a_challenge);
+
   app.route('/challenges')
     .get(challengeStuff.list_all_challenges)
     .post(challengeStuff.create_a_challenge);
@@ -52,6 +55,9 @@ module.exports = function(app) {
     .delete(packageStuff.delete_a_pack);
 
   // question routes
+  app.route('/questions/image')
+    .post(questionStuff.get_base64_image);
+
   app.route('/questions')
     .get(questionStuff.list_all_questions)
     .post(questionStuff.create_a_question);
@@ -78,6 +84,9 @@ module.exports = function(app) {
     .post(adminStuff.create);
 
   // topics routes ------------------------------------------------
+  app.route('/topics/game')
+    .get(topicStuff.list_available_topics);
+
   app.route('/topics')
     .get(topicStuff.list_all_topics)
     .post(topicStuff.create_a_topic);

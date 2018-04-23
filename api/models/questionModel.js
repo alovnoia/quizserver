@@ -5,6 +5,7 @@ var Schema = mongoose.Schema;
 var QuestionSchema = new Schema({
   content: String,
   image: String,
+  base64Image: String,
   code: String,
   level: {
     type: String,
