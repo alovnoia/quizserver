@@ -6,14 +6,36 @@ module.exports = function(app) {
   var packageStuff = require('../controllers/packageController');
   var challengeStuff = require('../controllers/challengeController');
   var gameStuff = require('../controllers/gameController');
+  var userStuff = require('../controllers/userController');
+
+  // users ------------------------------------------------
+
+  app.route('/users/get_by_email')
+    .post(userStuff.get_user_by_email)
+
+  app.route('/users/check')
+    .post(userStuff.check_user)
+
+  app.route('/users')
+    .get(userStuff.list_all_users)
+    .post(userStuff.create_a_user);
+
+
+  app.route('/users/:userId')
+    .get(userStuff.get_a_user)
+    .put(userStuff.update_a_user)
+    .delete(userStuff.delete_a_user);
 
   // games ------------------------------------------------
+  app.route('/games/review')
+    .post(gameStuff.get_game_by_user);
+
   app.route('/games/find')
     .post(gameStuff.find_a_game);
 
   app.route('/games')
     .get(gameStuff.list_all_games)
-    .post(gameStuff.create_a_game);
+    .post(gameStuff.save_game);
 
 
   app.route('/games/:gameId')
@@ -55,6 +77,9 @@ module.exports = function(app) {
     .delete(packageStuff.delete_a_pack);
 
   // question routes
+  app.route('/questions/list_image')
+    .post(questionStuff.get_list_base64_image);
+
   app.route('/questions/image')
     .post(questionStuff.get_base64_image);
 

@@ -72,7 +72,9 @@ exports.find_question = function(req, res) {
 exports.create_a_question = function(req, res) {
   var new_question = new Question(req.body);
   console.log(new_question.base64Image);
-  imageHelper.base64_decode(new_question.base64Image.split(',')[1], new_question.image);
+  if (new_question.base64Image) {
+    imageHelper.base64_decode(new_question.base64Image.split(',')[1], new_question.image);
+  }
   new_question.base64Image = '';
   new_question.save(function(err, question) {
     if (err)
@@ -82,8 +84,21 @@ exports.create_a_question = function(req, res) {
 };
 
 exports.get_base64_image = function(req, res) {
-  console.log(req.body.image);
   res.json({base64Image: imageHelper.base64_encode(req.body.image)});
+};
+
+exports.get_list_base64_image = function(req, res) {
+  var arrImage = req.body.data.split(',');
+  var result = '';
+  for (var i = 0; i < arrImage.length; i++) {
+    if (arrImage[i]) {
+      result += imageHelper.base64_encode_raw(arrImage[i]) + ',';
+    } else {
+      result += ',';
+    }
+  }
+  //console.log(result.split(',').length);
+  res.send(result);
 };
 
 exports.read_a_question = function(req, res) {
@@ -126,7 +141,7 @@ exports.delete_a_question = function(req, res) {
 };
 
 exports.find_question_by_list = function(req, res) {
-  console.log(req.body.questionList);
+  //console.log(req.body.questionList);
   Question.find({_id: {$in: req.body.questionList}}, function(err, question) {
     if (err)
       res.send(err);

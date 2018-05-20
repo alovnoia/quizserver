@@ -16,6 +16,7 @@ exports.list_all_challenges = function(req, res) {
 
 exports.create_a_challenge = function(req, res) {
   var requestJson;
+  var filter;
   // mobile request not same with web request
   if (req.body.mobile) {
     requestJson = JSON.parse(req.body.data);
@@ -44,13 +45,17 @@ exports.create_a_challenge = function(req, res) {
       if (err) {
         res.send(err);
       } else {
+        p[0].questions = [];
         for (var i = 0; i < q.length; i++) {
           if (q[i].image) {
             q[i].base64Image = imageHelper.base64_encode(q[i].image);
+            p[0].questions.unshift(q[i]);
+          } else {
+            p[0].questions.push(q[i]);
           }
         }
-        console.log(q);
-        p[0].questions = q;
+        console.log(p[0].questions);
+        //p[0].questions.reverse();
         var new_challenge = new Challenge({
           idUser1: req.body.idUser1,
           package: p[0]
@@ -79,6 +84,7 @@ exports.save_a_challenge = function(req, res) {
   for (var i = 0; i < new_challenge.package.questions.length; i++) {
     new_challenge.package.questions[i].base64Image = '';
   }
+  Challenge.updateMany({idUser1: requestJson.idUser1}, {$set: {enable: false}}, function (err, updated) {});
   new_challenge.save(function(err, challenge) {
     //console.log(challenge);
     if (err)

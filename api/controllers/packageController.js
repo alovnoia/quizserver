@@ -62,21 +62,39 @@ exports.find_packs = function(req, res) {
 };
 
 exports.generate_questions = function(req, res) {
+  //Aggregations are operations that process data records and return computed results
   Question.aggregate([
     {
       $match: {
         'level': req.body.level, 
         'topic._id': {$in: [req.body.topic]},
+        'image': {$eq: ''},
         'deleted': false
       }
     }, 
     {
-      $sample: {size: 2}
+      $sample: {size: 3}
     }], 
     function(err, q) {
       if (err)
         res.send(err);
-      res.send(q);
+      Question.aggregate([
+      {
+        $match: {
+          'level': req.body.level, 
+          'topic._id': {$in: [req.body.topic]},
+          'image': {$ne: ''},
+          'deleted': false
+        }
+      }, 
+      {
+        $sample: {size: 2}
+      }], 
+      function(err, q1) {
+        if (err)
+          res.send(err);
+        res.send(q1.concat(q));
+      });
   });
 };
 
